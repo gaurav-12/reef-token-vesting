@@ -30,7 +30,7 @@ export const createVesting = async (
     return await factoryContract.createVesting(
         vestingOwner,
         beneficiary,
-        token,
+        token.length ? token : beneficiary,
         start,
         cliffDuration,
         duration,

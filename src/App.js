@@ -12,6 +12,7 @@ import { Welcome } from "./components/Welcome";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { VestingsList } from './components/VestingsList';
 
 const URL = "wss://rpc-testnet.reefscan.com/ws";
 
@@ -81,8 +82,19 @@ function App() {
                 setConnectedAddress(address);
                 setLoadingVestings(true);
                 getAllVestings(wallet, address).then(data => {
+                    console.log(data);
                     setVestingsList([...data]);
                     setLoadingVestings(false);
+                }).catch(e => {
+                    setVestingsList([]);
+                    console.log(e);
+                    toast("Failure", {
+                        autoClose: 2000,
+                        closeOnClick: true,
+                        position: "bottom-right",
+                        theme: "light",
+                        type: "error"
+                    });
                 });
             }
 
@@ -117,10 +129,23 @@ function App() {
             ).then(d => {
                 setDeployingVesting(false);
                 console.log(d);
-                alert('Success!');
+                toast("Success", {
+                    autoClose: 2000,
+                    closeOnClick: true,
+                    position: "bottom-right",
+                    theme: "light",
+                    type: "success"
+                });
             }).catch(e => {
+                setDeployingVesting(false);
                 console.log(e);
-                alert('Failure!');
+                toast("Failure", {
+                    autoClose: 2000,
+                    closeOnClick: true,
+                    position: "bottom-right",
+                    theme: "light",
+                    type: "error"
+                });
             })
         }
     }
@@ -244,7 +269,7 @@ function App() {
                             <Uik.Container vertical>
                                 {loadingVestings ?
                                     <Uik.Loading color="black" text="Fetching your Vestings" />
-                                    : vestingsList.length ? <><p>There are some...</p></>
+                                    : vestingsList.length ? <VestingsList data={vestingsList} />
                                         : <>
                                             <Uik.Text type="light" />No Vestings Found<Uik.Text />
                                         </>
